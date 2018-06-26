@@ -36,16 +36,21 @@ public class CubeSpinner : MonoBehaviour {
 
     public void ClickThis()
     {
-        print("ClickThis()");
-        RandomizeColor();
+        //print("ClickThis()");
+        //RandomizeColor();
     }
 
     private void RandomizeColor()
     {
-        print("RandomizeColor()");
+        //print("RandomizeColor()");
         Renderer rend = GetComponent<Renderer>();
         Color c = Random.ColorHSV();
         rend.material.SetColor("_Color", c);
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        RandomizeColor();
     }
 }

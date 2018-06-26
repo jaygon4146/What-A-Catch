@@ -3,6 +3,9 @@
 ###
 [Aa]ssets/AssetStoreTools*
 [Bb]uild/
+[Bb]uilds/
+[Mm]oblieBuilds/
+[Pp]CBuilds/
 [Ll]ibrary/
 [Ll]ocal[Cc]ache/
 [Oo]bj/
@@ -12,6 +15,10 @@
 sysinfo.txt
 # Unity3D generated meta files
 *.pidb.meta
+#Mobile Apk
+*.apk
+
+
 
 ###
 # VS/MD solution and project files
