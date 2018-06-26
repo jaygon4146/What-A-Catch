@@ -13,9 +13,10 @@ public class CubeSpinner : MonoBehaviour {
     private float z = 0;
 
     // Use this for initialization
-    void Start () {
-		
-	}
+    void Awake ()
+    {
+        RandomizeColor();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -32,4 +33,19 @@ public class CubeSpinner : MonoBehaviour {
 
         countDown -= Time.deltaTime;
 	}
+
+    public void ClickThis()
+    {
+        print("ClickThis()");
+        RandomizeColor();
+    }
+
+    private void RandomizeColor()
+    {
+        print("RandomizeColor()");
+        Renderer rend = GetComponent<Renderer>();
+        Color c = Random.ColorHSV();
+        rend.material.SetColor("_Color", c);
+
+    }
 }
