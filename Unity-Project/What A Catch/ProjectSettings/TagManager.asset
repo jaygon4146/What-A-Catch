@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ball
+  - Environment
+  - GameManager
   layers:
   - Default
   - TransparentFX
@@ -15,11 +18,11 @@ TagManager:
   - 
   - PostProcessing
   - 
+  - Players
   - 
+  - Ball
   - 
-  - 
-  - 
-  - 
+  - Environment
   - 
   - 
   - 
