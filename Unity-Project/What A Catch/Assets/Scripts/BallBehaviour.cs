@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class BallBehaviour : MonoBehaviour {
+public class BallBehaviour : NetworkBehaviour {
 
     public enum BallState
     {
@@ -14,45 +15,14 @@ public class BallBehaviour : MonoBehaviour {
     private Rigidbody rigidbody;
     private SphereCollider collider;
 
-    [SerializeField] private int carrierId = -1;
-
+    private Transform myCarrier;
+    
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<SphereCollider>();
     }
-
-    public bool AttemptPickUp(int kidId)
-    {
-        if (ballState != BallState.Free)
-        {
-            return false;
-        }
-        carrierId = kidId;
-        ballState = BallState.Carried;
-        print("Ball was picked up by Kid #" + carrierId);
-
-        rigidbody.useGravity = false;
-        rigidbody.velocity = Vector3.zero;
-
-        return true;
-    }
-
-    public bool AttemptRelease(int kidId)
-    {
-        if (ballState != BallState.Carried)
-        {
-            return false;
-        }
-        print("Ball was released by Kid #" + carrierId);
-        carrierId = -1;
-        ballState = BallState.Free;
-
-        rigidbody.useGravity = true;
-
-        return true;
-    }
-
+        
     private void FixedUpdate()
     {
         if (ballState == BallState.Free)
@@ -62,27 +32,18 @@ public class BallBehaviour : MonoBehaviour {
 
         if (ballState == BallState.Carried)
         {
-            
+            transform.position = myCarrier.position;
         }
     }
 
-    public bool AttemptCarryBall(int kidId, Transform transformCarrier)
+    public void MoveTo(Vector3 pos)
     {
-        if (ballState != BallState.Carried)
-        {
-            return false;
-        }
-        if (kidId != carrierId)
-        {
-            return false;
-        }
-        transform.position = transformCarrier.position;
-
-        return true;
+        transform.position = pos;
     }
-    
-    public int GetCarrierId()
-    {
-        return carrierId;
+
+    public void Throw(Vector3 throwForce){
+        print("Throw()");
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.AddForce(throwForce, ForceMode.Acceleration);
     }
 }

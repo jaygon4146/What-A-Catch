@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
-
-    public BallBehaviour gameBall;
+public class GameReferee : MonoBehaviour {
 
     [SerializeField] private List<KidController> kidList = new List<KidController>();
 

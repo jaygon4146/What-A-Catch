@@ -19,10 +19,13 @@ public class KidController : NetworkBehaviour {
     #region Physics
     public float moveForce = 5f;
     [SerializeField] Vector3 moveVector = new Vector3();
+    public float throwForce = 10f;
+    [SerializeField] Vector3 throwVector = Vector3.up;
     #endregion
     //==================================================
     #region Components
-    [SerializeField] private GameManager     gameManager;
+    private KidUnit         kidUnit;
+    private KidNetworker    kidNetworker;
     private InputManager    kidInput;
     private Rigidbody       rigidbody;
     #endregion
@@ -32,8 +35,6 @@ public class KidController : NetworkBehaviour {
     #endregion
     //==================================================
     #region Attributes
-    [SerializeField] private int kidListId;
-    [SerializeField] private BallBehaviour ballBehaviour;
     #endregion
     //==================================================
     //==================================================
@@ -42,19 +43,16 @@ public class KidController : NetworkBehaviour {
     void Awake()
     {
         GetComponents();
-        kidListId = gameManager.AddToKidList(this);
     }
-
     void GetComponents()
     {
-        GameObject obj = GameObject.FindWithTag("GameManager");
-        gameManager = obj.GetComponent<GameManager>();
-
-        kidInput = GetComponent<InputManager>();
-        rigidbody = GetComponent<Rigidbody>();
+        kidUnit         = GetComponent<KidUnit>();
+        kidInput        = GetComponent<InputManager>();
+        rigidbody       = GetComponent<Rigidbody>();
     }
     #endregion
     //==================================================
+    #region PhysicsUpdates
     void FixedUpdate ()
     {
         if (controlType == ControlType.Catching)
@@ -66,20 +64,23 @@ public class KidController : NetworkBehaviour {
             ThrowingFixedUpdate();
         }
     }
-
     void CatchingFixedUpdate()
     {
-        float horz = kidInput.MoveHorizontalAction.axisFloat;
-        float vert = kidInput.MoveVerticalAction.axisFloat;
-
-        Vector3 inputVector = new Vector3(horz, 0f, vert);
-        moveVector = inputVector * moveForce;
-
-        rigidbody.velocity = moveVector;
+        ApplyMovement();
     }
 
     void ThrowingFixedUpdate()
     {
+        ApplyMovement();
+
+        if (kidInput.ReleaseBallAction.buttonDown)
+        {
+            ThrowBall();
+        }
+    }
+
+    void ApplyMovement()
+    {
         float horz = kidInput.MoveHorizontalAction.axisFloat;
         float vert = kidInput.MoveVerticalAction.axisFloat;
 
@@ -87,27 +88,15 @@ public class KidController : NetworkBehaviour {
         moveVector = inputVector * moveForce;
 
         rigidbody.velocity = moveVector;
-
-        bool carried = ballBehaviour.AttemptCarryBall(kidListId, ballHolder);
-
-        if (kidInput.ReleaseBallAction.buttonHeld)
-        {
-            bool success = ballBehaviour.AttemptRelease(kidListId);
-            if (success)
-            {
-                ThrowBall();
-            }
-        }
     }
+    #endregion
     //==================================================
-    #region BallActions
-    public void PickUpBall()
-    {        
-        controlType = ControlType.Throwing;
-    }
+    #region BallCommands
     private void ThrowBall()
     {
-        controlType = ControlType.Catching;
+        print("ThrowBall()");
+        throwVector = Vector3.up * throwForce;
+        kidUnit.AttemptThrowBall(ballHolder.position, throwVector);
     }
     #endregion
     //==================================================
@@ -116,17 +105,8 @@ public class KidController : NetworkBehaviour {
     {
         if (collision.gameObject.tag == "Ball")
         {
-            BallBehaviour ball = collision.gameObject.GetComponent<BallBehaviour>();
-            bool success = ball.AttemptPickUp(kidListId);
-            if (success)
-            {
-                PickUpBall();
-                ballBehaviour = ball;
-            }
         }
     }
     #endregion
     //==================================================
-
-
 }

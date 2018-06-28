@@ -15,6 +15,8 @@ public class KidNetworker : NetworkBehaviour
 
     GameObject mainCamera;
 
+    [SerializeField] private static List<KidNetworker> kidList = new List<KidNetworker>();
+
     private void Start()
     {
         mainCamera = Camera.main.gameObject;
@@ -22,6 +24,24 @@ public class KidNetworker : NetworkBehaviour
         EnablePlayer();    
     }
 
+    [ServerCallback]
+    private void OnEnable()
+    {
+        if (!kidList.Contains(this))
+        {
+            kidList.Add(this);
+        }
+    }
+
+    [ServerCallback]
+    private void OnDisable()
+    {
+        if (kidList.Contains(this))
+        {
+            kidList.Remove(this);
+        }
+    }
+    
     void DisablePlayer()
     {
         if (isLocalPlayer)

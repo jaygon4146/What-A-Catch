@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 114401612088185944}
   - component: {fileID: 114021346117485426}
   - component: {fileID: 114854474250306144}
+  - component: {fileID: 114509768440490596}
   m_Layer: 10
   m_Name: KidPlayer
   m_TagString: Player
@@ -324,6 +325,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114509768440490596}
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: ToggleEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onToggleLocal:
     m_PersistentCalls:
@@ -366,6 +378,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: ToggleEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!114 &114509768440490596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1652490029808174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1965ffdd450cc0c42aa8caf917187078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114764133673969740
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -377,13 +400,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1742de183edeeb4db242c3e5d0d088f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlType: 2
+  controlType: 1
   moveForce: 5
   moveVector: {x: 0, y: 0, z: 0}
-  gameManager: {fileID: 0}
+  throwForce: 400
+  throwVector: {x: 0, y: 1, z: 0}
   ballHolder: {fileID: 4503967763953060}
-  kidListId: 0
-  ballBehaviour: {fileID: 0}
 --- !u!114 &114854474250306144
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -396,7 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.1
+  m_SendInterval: 0.05263158
   m_SyncRotationAxis: 2
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
