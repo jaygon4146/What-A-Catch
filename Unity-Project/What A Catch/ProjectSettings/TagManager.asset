@@ -8,6 +8,7 @@ TagManager:
   - Environment
   - GameManager
   - Referee
+  - InputUI
   layers:
   - Default
   - TransparentFX

@@ -15,7 +15,7 @@ public class BallBehaviour : NetworkBehaviour {
     private Rigidbody rigidbody;
     private SphereCollider collider;
 
-    private Transform myCarrier;
+    private KidController myCarrier;
     
     private void Awake()
     {
@@ -32,7 +32,8 @@ public class BallBehaviour : NetworkBehaviour {
 
         if (ballState == BallState.Carried)
         {
-            transform.position = myCarrier.position;
+            //transform.position = myCarrier.position;
+            transform.position = myCarrier.GetBallPosition();
         }
     }
 
@@ -41,9 +42,29 @@ public class BallBehaviour : NetworkBehaviour {
         transform.position = pos;
     }
 
-    public void Throw(Vector3 throwForce){
-        print("Throw()");
+    public void Throw(Vector3 throwForce)
+    {
+        if (ballState != BallState.Carried)
+            return;
+
+        //print("Throw()");
         rigidbody.velocity = Vector3.zero;
+        rigidbody.useGravity = true; ;
         rigidbody.AddForce(throwForce, ForceMode.Acceleration);
+        ballState = BallState.Free;
+    }
+
+    public void Grab(GameObject grabber)
+    {
+        //print("Grab()");
+        if (ballState != BallState.Free)
+            return;
+
+        myCarrier = grabber.GetComponent<KidController>();
+        myCarrier.RpcAcceptBallGrab();
+
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.useGravity = false;
+        ballState = BallState.Carried;
     }
 }

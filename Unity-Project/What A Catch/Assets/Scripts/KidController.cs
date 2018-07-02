@@ -5,17 +5,7 @@ using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class KidController : NetworkBehaviour {
-    //==================================================
-    #region Inputs
-    public enum ControlType
-    {
-        MenuNavigation,
-        Throwing,
-        Catching,
-    }
-    public ControlType controlType = ControlType.Catching;
-    #endregion
-    //==================================================
+    
     #region Physics
     public float moveForce = 5f;
     [SerializeField] Vector3 moveVector = new Vector3();
@@ -26,6 +16,7 @@ public class KidController : NetworkBehaviour {
     #region Components
     private KidUnit         kidUnit;
     private KidNetworker    kidNetworker;
+    private NetworkIdentity networkIdentity;
     private InputManager    kidInput;
     private Rigidbody       rigidbody;
     #endregion
@@ -35,6 +26,8 @@ public class KidController : NetworkBehaviour {
     #endregion
     //==================================================
     #region Attributes
+    [SerializeField] private bool holdingBall = false;
+    [SerializeField] private string netId;
     #endregion
     //==================================================
     //==================================================
@@ -43,10 +36,14 @@ public class KidController : NetworkBehaviour {
     void Awake()
     {
         GetComponents();
+        netId = "#" + networkIdentity.netId;
+
     }
     void GetComponents()
     {
         kidUnit         = GetComponent<KidUnit>();
+        kidNetworker    = GetComponent<KidNetworker>();
+        networkIdentity = GetComponent<NetworkIdentity>();
         kidInput        = GetComponent<InputManager>();
         rigidbody       = GetComponent<Rigidbody>();
     }
@@ -55,11 +52,11 @@ public class KidController : NetworkBehaviour {
     #region PhysicsUpdates
     void FixedUpdate ()
     {
-        if (controlType == ControlType.Catching)
+        if (kidInput.isCatching())
         {
             CatchingFixedUpdate();
         }
-        if (controlType == ControlType.Throwing)
+        if (kidInput.isThrowing())
         {
             ThrowingFixedUpdate();
         }
@@ -71,9 +68,7 @@ public class KidController : NetworkBehaviour {
 
     void ThrowingFixedUpdate()
     {
-        ApplyMovement();
-
-        if (kidInput.ReleaseBallAction.buttonDown)
+        if (kidInput.throwWasReleased())
         {
             ThrowBall();
         }
@@ -97,14 +92,30 @@ public class KidController : NetworkBehaviour {
         print("ThrowBall()");
         throwVector = Vector3.up * throwForce;
         kidUnit.AttemptThrowBall(ballHolder.position, throwVector);
+        holdingBall = false;
+        kidInput.ThrowBall();
+    }
+    [ClientRpc]
+    public void RpcAcceptBallGrab()
+    {
+        kidInput.GrabBall();
+    }
+    public Vector3 GetBallPosition()
+    {
+        return ballHolder.transform.position;
     }
     #endregion
     //==================================================
     #region ColliderEvents
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ball")
+        if (kidInput.isCatching())
         {
+            if (collision.gameObject.tag == "Ball")
+            {
+                //print("Touched Ball()");
+                kidUnit.AttemptGrabBall(gameObject);
+            }
         }
     }
     #endregion

@@ -29,6 +29,12 @@ public class KidUnit : NetworkBehaviour {
     {
         CmdThrowBall(origin, throwVector);
     }
+
+    public void AttemptGrabBall(GameObject grabber)
+    {
+        //print("AttemptGrabBall()");
+        CmdGrabBall(grabber);
+    }
     #endregion
     //==================================================
     #region BallServerCommands
@@ -41,6 +47,12 @@ public class KidUnit : NetworkBehaviour {
     {
         ballList[0].MoveTo(origin);
         ballList[0].Throw(throwVector);
+    }
+    [Command]
+    private void CmdGrabBall(GameObject grabber)
+    {
+        //print("CmdGrabBall()");
+        ballList[0].Grab(grabber);
     }
     #endregion
     //================================================== 

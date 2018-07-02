@@ -178,5 +178,72 @@ public abstract class InputUtilities : MonoBehaviour
             #endregion
             //==================================================
         }
+
+        public void ResetCrossPlatformInput()
+        {//==================================================
+            #region Axis
+            axisFloat = 0;
+            foreach (string axis in AxisNames)
+            {
+                float tAxis = 0;
+                axisFloat = tAxis;
+            }
+            #endregion
+            //==================================================
+            #region Button
+            buttonDown = false;
+            buttonUp = false;
+            foreach (string button in ButtonNames)
+            {
+                bool tButtonDown = false;
+                bool tButtonHeld = false;
+                bool tButtonUp = false;
+
+                if (tButtonDown)
+                {
+                    buttonDown = true;
+                    buttonHeld = true;
+                    buttonUp = false;
+                }
+                if (tButtonHeld)
+                {
+                }
+                if (tButtonUp)
+                {
+                    buttonDown = false;
+                    buttonHeld = false;
+                    buttonUp = true;
+                }
+            }
+            #endregion
+            //==================================================
+            #region Key
+            keyDown = false;
+            keyUp = false;
+            foreach (KeyCode key in KeyCodes)
+            {
+                bool tKeyDown = false;
+                bool tKeyHeld = false;
+                bool tKeyUp = false;
+
+                if (tKeyDown)
+                {
+                    keyDown = true;
+                    keyHeld = true;
+                    keyUp = false;
+                }
+                if (tKeyHeld)
+                {
+                }
+                if (tKeyUp)
+                {
+                    keyDown = false;
+                    keyHeld = false;
+                    keyUp = true;
+                }
+            }
+            #endregion
+            //==================================================
+        }
     }
 }
