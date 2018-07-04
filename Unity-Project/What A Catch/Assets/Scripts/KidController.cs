@@ -37,7 +37,6 @@ public class KidController : NetworkBehaviour {
     {
         GetComponents();
         netId = "#" + networkIdentity.netId;
-
     }
     void GetComponents()
     {
@@ -89,16 +88,34 @@ public class KidController : NetworkBehaviour {
     #region BallCommands
     private void ThrowBall()
     {
-        print("ThrowBall()");
-        throwVector = Vector3.up * throwForce;
+        //print("ThrowBall()");
+        Vector3 throwInput = kidInput.GetThrowVector();
+        //print("ThrowInput = " + throwInput);
+
+        throwVector = new Vector3(-throwInput.x, 10, -throwInput.y);
+        throwVector *= throwForce;
+        //print("ThrowVector = " + throwVector);
+        //print("ThrowBall()");
         kidUnit.AttemptThrowBall(ballHolder.position, throwVector);
-        holdingBall = false;
-        kidInput.ThrowBall();
+    }
+    [ClientRpc]
+    public void RpcAcceptBallThrow()
+    {
+        if (isLocalPlayer)
+        {
+            kidInput.ThrowBall();
+            holdingBall = false;
+        }
     }
     [ClientRpc]
     public void RpcAcceptBallGrab()
     {
-        kidInput.GrabBall();
+        if (isLocalPlayer)
+        {
+            moveVector = Vector3.zero;
+            rigidbody.velocity = moveVector;
+            kidInput.GrabBall();
+        }
     }
     public Vector3 GetBallPosition()
     {

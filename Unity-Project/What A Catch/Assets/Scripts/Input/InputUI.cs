@@ -11,6 +11,7 @@ public class InputUI : MonoBehaviour {
     
     public void AttachInputManager(InputManager m)
     {
+        //print("AttachInputManager");
         inputManager = m;
     }
 
@@ -27,6 +28,7 @@ public class InputUI : MonoBehaviour {
 
     public void AcceptThrowDelta(Vector2 deltaPointer)
     {
+        //print("AcceptThrowDelta()");
         inputManager.AcceptThrowDelta(deltaPointer);
     }
 }

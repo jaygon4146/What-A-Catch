@@ -135,7 +135,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1409101218052806}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4229792112880932}
@@ -400,12 +400,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1742de183edeeb4db242c3e5d0d088f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlType: 2
   moveForce: 5
   moveVector: {x: 0, y: 0, z: 0}
-  throwForce: 400
+  throwForce: 2
   throwVector: {x: 0, y: 1, z: 0}
   ballHolder: {fileID: 4503967763953060}
+  holdingBall: 0
+  netId: 
 --- !u!114 &114854474250306144
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,6 +439,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ebdb9e18110a74dac98c81ac668847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMode: 2
+  MenuNavActionList: []
+  ThrowingActionList: []
+  CatchingActionList: []
   MoveHorizontalAction:
     ActionName: MoveHorizontal
     axisFloat: 0
@@ -456,6 +461,33 @@ MonoBehaviour:
     keyDown: 0
     keyHeld: 0
     keyUp: 0
+  HoldAimAction:
+    ActionName: HoldAim
+    axisFloat: 0
+    buttonDown: 0
+    buttonHeld: 0
+    buttonUp: 0
+    keyDown: 0
+    keyHeld: 0
+    keyUp: 0
+  AimHorizontalAction:
+    ActionName: AimHorizontal
+    axisFloat: 0
+    buttonDown: 0
+    buttonHeld: 0
+    buttonUp: 0
+    keyDown: 0
+    keyHeld: 0
+    keyUp: 0
+  AimVerticalAction:
+    ActionName: AimVertical
+    axisFloat: 0
+    buttonDown: 0
+    buttonHeld: 0
+    buttonUp: 0
+    keyDown: 0
+    keyHeld: 0
+    keyUp: 0
   ReleaseBallAction:
     ActionName: ReleaseBall
     axisFloat: 0
@@ -465,6 +497,11 @@ MonoBehaviour:
     keyDown: 0
     keyHeld: 0
     keyUp: 0
+  inputUIObj: {fileID: 0}
+  inputUI: {fileID: 0}
+  mouseDownAim: {x: 0, y: 0, z: 0}
+  throwInputVector: {x: 0, y: 0, z: 0}
+  throwReleased: 0
 --- !u!124 &124496767860852688
 Behaviour:
   m_ObjectHideFlags: 1

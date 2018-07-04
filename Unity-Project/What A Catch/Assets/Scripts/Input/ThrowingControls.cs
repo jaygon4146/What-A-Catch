@@ -24,8 +24,8 @@ public class ThrowingControls : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public int MovementRange = 100;
     public AxisOption axesToUse = AxisOption.Both; // The options for the axes that the still will use
-    public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
-    public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
+    public string horizontalAxisName = "Mouse X"; // The name given to the horizontal axis for the cross platform input
+    public string verticalAxisName = "Mouse Y"; // The name given to the vertical axis for the cross platform input
 
     bool m_UseX; // Toggle for using the x axis
     bool m_UseY; // Toggle for using the Y axis
@@ -125,7 +125,11 @@ public class ThrowingControls : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             int y = (int)(data.position.y - startDownPos.y);
             delta.y = y;
         }
+
+        delta = Vector3.ClampMagnitude(delta, MovementRange);
+
         InputUI inputUI = GameObject.FindGameObjectWithTag("InputUI").GetComponent<InputUI>();
+
         inputUI.AcceptThrowDelta(delta);
 
         pointerPoint.transform.position = startDownPos;

@@ -44,17 +44,31 @@ public class BallBehaviour : NetworkBehaviour {
 
     public void Throw(Vector3 throwForce)
     {
+        RpcThrow(throwForce);
+    }
+    [ClientRpc]
+    public void RpcThrow(Vector3 throwForce)
+    {
         if (ballState != BallState.Carried)
             return;
+
+        myCarrier.RpcAcceptBallThrow();
 
         //print("Throw()");
         rigidbody.velocity = Vector3.zero;
         rigidbody.useGravity = true; ;
         rigidbody.AddForce(throwForce, ForceMode.Acceleration);
+        collider.enabled = true;
         ballState = BallState.Free;
     }
 
+
     public void Grab(GameObject grabber)
+    {
+        RpcGrab(grabber);
+    }
+    [ClientRpc]
+    public void RpcGrab(GameObject grabber)
     {
         //print("Grab()");
         if (ballState != BallState.Free)
@@ -65,6 +79,7 @@ public class BallBehaviour : NetworkBehaviour {
 
         rigidbody.velocity = Vector3.zero;
         rigidbody.useGravity = false;
+        collider.enabled = false;
         ballState = BallState.Carried;
     }
 }

@@ -18,17 +18,19 @@ public class InputManager : InputUtilities {
     [SerializeField] private List<InputAction> ThrowingActionList = new List<InputAction>();
     [SerializeField] private List<InputAction> CatchingActionList = new List<InputAction>();
     //==================================================
-    public InputAction MoveHorizontalAction = new InputAction("MoveHorizontal");
-    public InputAction MoveVerticalAction = new InputAction("MoveVertical");
+    public InputAction MoveHorizontalAction     = new InputAction("MoveHorizontal");
+    public InputAction MoveVerticalAction       = new InputAction("MoveVertical");
 
-    public InputAction AimHorizontalAction = new InputAction("AimHorizontal");
-    public InputAction AimVerticalAction = new InputAction("AimVertical");
+    public InputAction HoldAimAction            = new InputAction("HoldAim");
+    public InputAction AimHorizontalAction      = new InputAction("AimHorizontal");
+    public InputAction AimVerticalAction        = new InputAction("AimVertical");
 
-    public InputAction ReleaseBallAction = new InputAction("ReleaseBall");
+    public InputAction ReleaseBallAction        = new InputAction("ReleaseBall");
     //==================================================
     [SerializeField] private GameObject inputUIObj;
     [SerializeField] private InputUI inputUI;
     //==================================================
+    [SerializeField] private Vector3 mouseDownAim = Vector3.zero;
     [SerializeField] private Vector3 throwInputVector = Vector3.zero;
     [SerializeField] private bool throwReleased = false;
     //==================================================
@@ -36,7 +38,16 @@ public class InputManager : InputUtilities {
     {
         SetUpInputs();
         AddActionsToLists();
+    }
 
+    private void OnEnable()
+    {
+        AttachInputToUI();
+    }
+
+    public void AttachInputToUI()
+    {
+        //print("Attaching Input To UI");
         inputUIObj = GameObject.FindGameObjectWithTag("InputUI");
         inputUI = inputUIObj.GetComponent<InputUI>();
         inputUI.AttachInputManager(this);
@@ -49,6 +60,7 @@ public class InputManager : InputUtilities {
         MoveHorizontalAction.AddAxis("Horizontal");
         MoveVerticalAction.AddAxis("Vertical");
 
+        HoldAimAction.AddButton("Fire1");
         AimHorizontalAction.AddAxis("Mouse X");
         AimVerticalAction.AddAxis("Mouse Y");
 
@@ -57,6 +69,7 @@ public class InputManager : InputUtilities {
 
     private void AddActionsToLists()
     {
+        ThrowingActionList.Add(HoldAimAction);
         ThrowingActionList.Add(AimHorizontalAction);
         ThrowingActionList.Add(AimVerticalAction);
         ThrowingActionList.Add(ReleaseBallAction);
@@ -81,6 +94,7 @@ public class InputManager : InputUtilities {
             foreach(InputAction action in ThrowingActionList)
             {
                 action.GetCrossPlatformInput();
+                UpdateAiming();
             }
             return;
         }
@@ -91,6 +105,14 @@ public class InputManager : InputUtilities {
                 action.GetCrossPlatformInput();
             }
             return;
+        }
+    }
+
+    private void UpdateAiming()
+    {
+        if (HoldAimAction.buttonDown)
+        {
+            mouseDownAim = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         }
     }
 
@@ -140,18 +162,26 @@ public class InputManager : InputUtilities {
         throwReleased = true;
     }
 
+    public Vector3 GetThrowVector()
+    {
+        return throwInputVector;
+    }
+
     public void ThrowBall()
     {
         controlMode = ControlMode.Catching;
-        inputUI.enableCatchingControls();
         ResetInputs();
+        if (inputUI == null)
+            return;
+        inputUI.enableCatchingControls();
     }
 
     public void GrabBall()
     {
         controlMode = ControlMode.Throwing;
-        inputUI.enableThrowingControls();
         ResetInputs();
+        if (inputUI == null)
+            return;
+        inputUI.enableThrowingControls();
     }
-
 }
