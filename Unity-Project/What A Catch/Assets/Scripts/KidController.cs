@@ -37,6 +37,7 @@ public class KidController : NetworkBehaviour {
     {
         GetComponents();
         netId = "#" + networkIdentity.netId;
+        kidUnit.AttachKidController(this);      
     }
     void GetComponents()
     {
@@ -71,6 +72,8 @@ public class KidController : NetworkBehaviour {
         {
             ThrowBall();
         }
+
+        CalculateThrowVector();
     }
 
     void ApplyMovement()
@@ -86,41 +89,36 @@ public class KidController : NetworkBehaviour {
     #endregion
     //==================================================
     #region BallCommands
-    private void ThrowBall()
+    private void CalculateThrowVector()
     {
-        //print("ThrowBall()");
         Vector3 throwInput = kidInput.GetThrowVector();
-        //print("ThrowInput = " + throwInput);
 
         throwVector = new Vector3(-throwInput.x, 10, -throwInput.y);
         throwVector *= throwForce;
-        //print("ThrowVector = " + throwVector);
-        //print("ThrowBall()");
+
+
+    }
+    private void ThrowBall()
+    {
+        CalculateThrowVector();
         kidUnit.AttemptThrowBall(ballHolder.position, throwVector);
     }
-    [ClientRpc]
-    public void RpcAcceptBallThrow()
+    public void AcceptBallThrow()
     {
-        if (isLocalPlayer)
-        {
-            kidInput.ThrowBall();
-            holdingBall = false;
-        }
+        kidInput.ThrowBall();
+        holdingBall = false;
     }
-    [ClientRpc]
-    public void RpcAcceptBallGrab()
+    public void AcceptBallGrab()
     {
-        if (isLocalPlayer)
-        {
-            moveVector = Vector3.zero;
-            rigidbody.velocity = moveVector;
-            kidInput.GrabBall();
-        }
+        moveVector = Vector3.zero;
+        rigidbody.velocity = moveVector;
+        kidInput.GrabBall();
     }
     public Vector3 GetBallPosition()
     {
         return ballHolder.transform.position;
     }
+    
     #endregion
     //==================================================
     #region ColliderEvents

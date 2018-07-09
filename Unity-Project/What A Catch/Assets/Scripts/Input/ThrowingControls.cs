@@ -95,18 +95,15 @@ public class ThrowingControls : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             int delta = (int)(data.position.y - startDownPos.y);
             newPos.y = delta;
         }
-        /*
-        transform.position = Vector3.ClampMagnitude(new Vector3
-            (newPos.x, newPos.y, newPos.z),
-            MovementRange) +
-            m_StartPos;
-            */
+      
 
-        pointerPoint.transform.position = Vector3.ClampMagnitude(new Vector3
-            (newPos.x, newPos.y, newPos.z),
-            MovementRange) +
-            startDownPos;
+        newPos = Vector3.ClampMagnitude(newPos, MovementRange);
 
+        InputUI inputUI = GameObject.FindGameObjectWithTag("InputUI").GetComponent<InputUI>();
+
+        inputUI.AcceptThrowDelta(newPos);
+
+        pointerPoint.transform.position = newPos + startDownPos;
 
         UpdateVirtualAxes(pointerPoint.transform.position);
     }
@@ -129,8 +126,8 @@ public class ThrowingControls : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         delta = Vector3.ClampMagnitude(delta, MovementRange);
 
         InputUI inputUI = GameObject.FindGameObjectWithTag("InputUI").GetComponent<InputUI>();
-
         inputUI.AcceptThrowDelta(delta);
+        inputUI.ReleaseThrow();
 
         pointerPoint.transform.position = startDownPos;
         UpdateVirtualAxes(startDownPos);

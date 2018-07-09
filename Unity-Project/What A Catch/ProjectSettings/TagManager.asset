@@ -9,6 +9,7 @@ TagManager:
   - GameManager
   - Referee
   - InputUI
+  - Trajectory
   layers:
   - Default
   - TransparentFX

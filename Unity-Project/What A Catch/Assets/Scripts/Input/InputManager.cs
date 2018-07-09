@@ -112,7 +112,7 @@ public class InputManager : InputUtilities {
     {
         if (HoldAimAction.buttonDown)
         {
-            mouseDownAim = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            //mouseDownAim = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         }
     }
 
@@ -159,8 +159,14 @@ public class InputManager : InputUtilities {
     public void AcceptThrowDelta(Vector3 deltaPointer)
     {
         throwInputVector = deltaPointer;
+        //throwReleased = true;
+    }
+
+    public void ReleaseThrow()
+    {
         throwReleased = true;
     }
+
 
     public Vector3 GetThrowVector()
     {

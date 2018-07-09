@@ -7,6 +7,7 @@ public class KidUnit : NetworkBehaviour {
 
     private GameObject[] ballObjects;
     private List<BallBehaviour> ballList = new List<BallBehaviour>();
+    private KidController myKid;
 
     private void Awake()
     {
@@ -20,6 +21,11 @@ public class KidUnit : NetworkBehaviour {
             }
         }
     }
+    public void AttachKidController(KidController kid)
+    {
+        myKid = kid;
+    }
+
     //==================================================
     #region KidController Input
     /*Local Controller needs to communicate...
@@ -54,6 +60,12 @@ public class KidUnit : NetworkBehaviour {
         //print("CmdGrabBall()");
         ballList[0].Grab(grabber);
     }
+
+    public Vector3 GetBallPosition()
+    {
+        return myKid.GetBallPosition();
+    }
+
     #endregion
     //================================================== 
     #region BallRemoteProcedureCalls
@@ -61,8 +73,20 @@ public class KidUnit : NetworkBehaviour {
      * - Update changes in Ball State
      */
     [ClientRpc]
-    private void RpcThrowBall()
+    public void RpcAcceptBallThrow()
     {
+        if (isLocalPlayer)
+        {
+            myKid.AcceptBallThrow();
+        }
+    }
+    [ClientRpc]
+    public void RpcAcceptBallGrab()
+    {
+        if (isLocalPlayer)
+        {
+            myKid.AcceptBallGrab();
+        }
     }
     #endregion
     //==================================================

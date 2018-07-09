@@ -15,7 +15,7 @@ public class BallBehaviour : NetworkBehaviour {
     private Rigidbody rigidbody;
     private SphereCollider collider;
 
-    private KidController myCarrier;
+    private KidUnit myCarrier;
     
     private void Awake()
     {
@@ -74,7 +74,7 @@ public class BallBehaviour : NetworkBehaviour {
         if (ballState != BallState.Free)
             return;
 
-        myCarrier = grabber.GetComponent<KidController>();
+        myCarrier = grabber.GetComponent<KidUnit>();
         myCarrier.RpcAcceptBallGrab();
 
         rigidbody.velocity = Vector3.zero;

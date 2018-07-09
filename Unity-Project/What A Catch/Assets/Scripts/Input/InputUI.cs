@@ -31,4 +31,9 @@ public class InputUI : MonoBehaviour {
         //print("AcceptThrowDelta()");
         inputManager.AcceptThrowDelta(deltaPointer);
     }
+
+    public void ReleaseThrow()
+    {
+        inputManager.ReleaseThrow();
+    }
 }
